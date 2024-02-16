@@ -1,4 +1,5 @@
-import Controller;
+from maestro import Controller;
+import time;
 
 WHEELFORWARDBACKWARD = 0
 WHEELTURN = 1
@@ -23,61 +24,47 @@ class Tango:
     def __init__(self):
         self.turn = int(input("Please enter the value: "))
         self.tango = Controller()
-        self.tango.setTarget(HEADTURN, self.turn) # example command
+        # Do we need anything else in the init function? I think we should be able to safely call methods by themselves
+
+        #self.tango.setTarget(HEADTURN, self.turn) # example command
         #self.tango = Controller()
         #self.turn = 4500
         #self.tango.setTarget(HEADTURN, self.turn)
 
-    def move_forward(self, val):
-        if (val >= 4000 and val < 5900):
-            self.tango.setTarget(WHEELFORWARDBACKWARD, val)
+    # Potentially add safety checks so that if some command combination can cause issues such as tipping,
+    # that combination won't be allowed
 
-    def move_backward(self, val):
-        if (val > 5900 and val <= 8000):
+    def move_fb(self, val):
+        if (val >= 4000 and val <= 8000):
             self.tango.setTarget(WHEELFORWARDBACKWARD, val)
 
     def stop_wheels_fb(self):
+        # Add in a loop to slow down too
         self.tango.setTarget(WHEELFORWARDBACKWARD, 5900)
 
-    def turn_wheels_right(self, val):
-        if (val >= 4000 and val < 5900):
-            self.tango.setTarget(WHEELTURN, val)
-
-    def turn_wheels_left(self, val):
-        if (val > 5900 and val <= 8000):
+    def turn_lr(self, val):
+        if (val >= 4000 and val <= 8000):
             self.tango.setTarget(WHEELTURN, val)
 
     def stop_wheels_lr(self):
         self.tango.setTarget(WHEELTURN, 5900)
 
-    def turn_waist_right(self, val):
-        if (val >= 4000 and val < 5900):
-            self.tango.setTarget(WAISTTURN, val)
-
-    def turn_waist_right(self, val):
-        if(val > 5900 and val <= 8000):
+    def turn_waist(self, val):
+        if (val != 5900):
             self.tango.setTarget(WAISTTURN, val)
 
     def center_waist(self):
         self.tango.setTarget(WAISTTURN, 5900)
 
-    def head_up(self, val):
-        if(val > 6000 and val <= 8000):
-            self.tango.setTarget(HEADUPDOWN, val)
-
-    def head_down(self, val):
-        if(val >= 4000 and val < 6000):
+    def head_up_down(self, val):
+        if(val >= 4000 and val <= 8000):
             self.tango.setTarget(HEADUPDOWN, val)
 
     def head_center_ud(self):
         self.tango.setTarget(HEADUPDOWN, 6000)
 
-    def head_left(self, val):
-        if(val >= 4000 and val < 5800):
-            self.tango.setTarget(HEADTURN, val)
-
-    def head_right(self, val):
-        if(val > 5800 and val <= 8000):
+    def head_lr(self, val):
+        if(val >= 4000 and val <= 8000):
             self.tango.setTarget(HEADTURN, val)
 
     def head_center_lr(self):
