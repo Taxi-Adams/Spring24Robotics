@@ -82,7 +82,7 @@
     e.preventDefault();
   }
 
-  function drag(e) {
+  async function drag(e) {
     if (isDragging) {
       const containerRect = joystickContainer.getBoundingClientRect();
       const handleSize = joystickHandle.offsetWidth;
@@ -100,12 +100,25 @@
       }
       
       joystickHandle.style.transform = `translate(${x}px, ${y}px)`;
-      console.log(`x=${Math.floor(x)}, Y=${Math.floor(y)}`);
+      
+      const data = {
+      servo: ['moveFB', 'moveLR'],
+      value: [Math.floor(x), Math.floor(y)]
+      }
+      
+      await fetch(`${window.origin}/process`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
     }
   }
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  
   function stopDrag(e) {
     isDragging = false;
     const containerRect = joystickContainer.getBoundingClientRect();
@@ -115,33 +128,44 @@
     if (y > 112.5) {
         y = 112.5;
       }
-    console.log(`THIS IS THE Y VALUE AT STOP: ${Math.floor(y)}`);
     joystickHandle.style.transform = 'translate(0, 0)';
   }
 
-  // Optional: You can add JavaScript to handle slider value changes
+  async function sendData(x) { 
+    const data = {
+      servo: x,
+      value: document.getElementById(x).value
+    }
+
+    await fetch(`${window.origin}/process`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+  }
+
+
+  // Sliders
   const waistSlider = document.getElementById('waistSlider');
   const tiltSlider = document.getElementById('tiltSlider');
   const panSlider = document.getElementById('panSlider');
 
   waistSlider.addEventListener('input', () => {
-    const waistValue = waistSlider.value;
-    console.log(`Waist value: ${waistValue}`);
-    // You can perform additional actions based on the slider value
+    sendData('waistSlider')
   });
 
   tiltSlider.addEventListener('input', () => {
-    const tiltValue = tiltSlider.value;
-    console.log(`Waist value: ${tiltValue}`);
-    // You can perform additional actions based on the slider value
+    sendData('tiltSlider')
   });
 
   panSlider.addEventListener('input', () => {
-    const panValue = panSlider.value;
-    console.log(`Waist value: ${panValue}`);
-    // You can perform additional actions based on the slider value
+    sendData('panSlider');
   });  
-
 
 </script>
 
