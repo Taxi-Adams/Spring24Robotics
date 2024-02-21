@@ -102,10 +102,10 @@
       joystickHandle.style.transform = `translate(${x}px, ${y}px)`;
       
       const data = {
-      servo: ['moveFB', 'moveLR'],
+      servo: ['WHEELFORWARDBACKWARD', 'WHEELTURN'],
       value: [Math.floor(x), Math.floor(y)]
       }
-      
+
       await fetch(`${window.origin}/process`, {
       method: "POST",
       mode: "cors",
@@ -131,10 +131,10 @@
     joystickHandle.style.transform = 'translate(0, 0)';
   }
 
-  async function sendData(x) { 
+  async function sendData(x, val) { 
     const data = {
       servo: x,
-      value: document.getElementById(x).value
+      value: document.getElementById(val).value
     }
 
     await fetch(`${window.origin}/process`, {
@@ -151,20 +151,20 @@
 
 
   // Sliders
-  const waistSlider = document.getElementById('waistSlider');
-  const tiltSlider = document.getElementById('tiltSlider');
-  const panSlider = document.getElementById('panSlider');
+  const WAISTTURN = document.getElementById('waistSlider');
+  const HEADUPDOWN = document.getElementById('tiltSlider');
+  const HEADTURN = document.getElementById('panSlider');
 
   waistSlider.addEventListener('input', () => {
-    sendData('waistSlider')
+    sendData('WAISTTURN', 'waistSlider')
   });
 
   tiltSlider.addEventListener('input', () => {
-    sendData('tiltSlider')
+    sendData('HEADUPDOWN', 'tiltSlider')
   });
 
   panSlider.addEventListener('input', () => {
-    sendData('panSlider');
+    sendData('HEADTURN', 'panSlider');
   });  
 
 </script>
