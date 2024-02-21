@@ -22,7 +22,7 @@ LEFTARMGRIPPER = 16
 
 class Tango:
     def __init__(self):
-        self.turn = int(input("Please enter the value: "))
+        #self.turn = int(input("Please enter the value: "))
         self.tango = Controller()
         # Do we need anything else in the init function? I think we should be able to safely call methods by themselves
 
