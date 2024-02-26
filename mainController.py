@@ -12,6 +12,8 @@ class MainController:
         mainController = Tango()
         wheel_fb_val = 5900
         wheel_lr_val = 5900
+        mainController.move_fb(wheel_fb_val)
+        mainController.turn_lr(wheel_lr_val)
         part_input = int(input("Please enter the part number: "))
         value_input = int(input("Please enter the value: "))
         while (part_input > 0):
