@@ -119,7 +119,7 @@
     }
   }
   
-  function stopDrag(e) {
+  async function stopDrag(e) {
     isDragging = false;
     const containerRect = joystickContainer.getBoundingClientRect();
     const handleSize = joystickHandle.offsetWidth;
@@ -129,6 +129,21 @@
         y = 112.5;
       }
     joystickHandle.style.transform = 'translate(0, 0)';
+    const data = {
+      servo: ['WHEELFORWARDBACKWARD', 'WHEELTURN'],
+      value: [0, 0]
+      }
+
+      await fetch(`${window.origin}/process`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
   }
 
   async function sendData(x, val) { 
