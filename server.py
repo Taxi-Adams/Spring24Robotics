@@ -33,8 +33,8 @@ def recv_message(conn, message) -> str:
         return "your turn"
 
 def main() -> None:
-    HOST = "localhost"
-    PORT = 65432
+    HOST = "172.20.10.3"
+    PORT = 12345
     token = "your turn"
     socket.setdefaulttimeout(30)
 
