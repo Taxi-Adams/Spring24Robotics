@@ -1,4 +1,4 @@
-import flaskBackend, client
+import flaskBackend, client, personality
 import _thread, threading
 
 def main() -> None:
@@ -6,8 +6,10 @@ def main() -> None:
     
     t1 = threading.Thread(target= flaskBackend.main, args= ())
     t2 = threading.Thread(target= client.main, args= ())
+    t3 = threading.Thread(target= personality.main, args= ())
 
     t1.start()
     t2.start()
+    t3.start()
 
 main()
