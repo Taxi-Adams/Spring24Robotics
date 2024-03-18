@@ -2,6 +2,8 @@ import time
 
 import tkinter as tk
 
+import client
+
 from PIL import ImageTk, Image
 
 from tango import Tango
@@ -124,8 +126,9 @@ def find(data: str) -> None:
         case "HEADUPDOWN": print(servoVal)
         case "HEADTURN": print(servoVal)
         
-def windowUpdate():
-    text = text + " b"
+def windowUpdate(text: str):
+    is_talking = True
+    test_text = text + " b"
     #self.text_background = ImageTk.PhotoImage(self.text_background_image)
     #self.text_background_label = tk.Label(self.window, text=self.text, image=self.text_background, borderwidth=0, compound='center')
     text_background_label = tk.Label(window, text=text, font=('Arial', 28), borderwidth=0)
@@ -133,6 +136,7 @@ def windowUpdate():
     text_background_label.pack()
     text_background_label.place(x=round(0.10*width), y=round(0.855*height))
     window.after(500, windowUpdate)
+    # need a way to know if talking/what the tts text is
     if(is_moving and not is_talking):
         # eyes are arrows, others off screen
         left_eye_label.place(x=round(1.5*width), y=round(1.5*height))
@@ -166,14 +170,14 @@ def windowUpdate():
         moving_left_label.place(x=round(1.5*width), y=round(1.5*height))
         moving_right_label.place(x=round(1.5*width), y=round(1.5*height))
 
-def main() -> None:
+def main(current_text: str) -> None:
     #bot = Tango()
     #bot.stop_wheels_fb()
     #bot.stop_wheels_lr()
     print(1)
     # Should always be true
     while(eye_position_vert < 100000000):
-        windowUpdate()
+        windowUpdate(client.current_text) # pulls current_text variable from client instance
         time.sleep(.03)
         
 if __name__ == "__main__":
