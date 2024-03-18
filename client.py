@@ -1,19 +1,22 @@
 import socket
 import tts
 
+current_text = ""
+
 def start_client(host, port) -> tuple:
     ''' Starts client and connects'''
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.connect((host, port))
     return server
 
-def send_message(conn, message: str, voice: tts.Speech) -> str:
+# send_message originally output -> str
+def send_message(conn, message: str, voice: tts.Speech) -> tuple:
     if message != "your turn":
         exit()
     try:
         voice.tts_script()
         conn.sendall(bytes(message, "ascii"))
-        return ""
+        return "", message
     except IndexError:
         conn.close()
         exit()
@@ -39,7 +42,8 @@ def main() -> None:
 
     while True:
         token = recv_message(conn, token)
-        token = send_message(conn, token, voice)
+        token, current_line = send_message(conn, token, voice) # if incorrect, remove , current_line
+        current_text = current_line
 
 if __name__ == "__main__":
     main()
