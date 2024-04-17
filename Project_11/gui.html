@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 11 GUI</title>
+</head>
+<style>
+
+    body {
+        overflow: hidden;
+        display: flex;
+    }
+    #sidebar {
+        margin-top: 10vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: grey;
+        height:80vh;
+        width: 10vw;
+    }
+
+    img {
+        border-style: solid;
+        height: 10%;
+        width: 90%;
+        margin-bottom: 10px;
+        border-width: 1px;
+    }
+
+    #programming-slots {
+        margin-top: 37.5vh;
+        margin-left: 10vw;
+        width: 70vw;
+        height: 25vh;
+        background-color: grey;;
+    }
+</style>
+<body>
+   <div id="sidebar">
+        <img id="motors_fd" draggable="true" src="images/placeholder-image.png" alt="Motor Control (Forwards and Backwards)">
+        <img id="motors_lr" draggable="true" src="images/placeholder-image.png" alt="Motor Control (Left and Right)">
+        <img id="head_tilt" draggable="true" src="images/placeholder-image.png" alt="Head Tilt">
+        <img id="head_pan" draggable="true" src="images/placeholder-image.png" alt="Head Pan">
+        <img id="waist" draggable="true" src="images/placeholder-image.png" alt="Waist Turn">
+        <img id="human_input" draggable="true" src="images/placeholder-image.png" alt="Wait for Human Input">
+        <img id="speak" draggable="true" src="images/placeholder-image.png" alt="Speaking">
+   </div>
+   <div id="programming-slots"></div>
+</body>
+</html>

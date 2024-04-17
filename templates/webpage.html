@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joystick</title>
+  <style>
+    #joystick-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      background-color: #B4B4B8;
+      margin-top: -250px;
+      margin-left: -150px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+    }
+
+    #joystick-handle {
+      position:relative;
+      top: 100px;
+      left: 100px;
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      border-radius: 50%;
+      cursor: grab;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    #sliders {
+      position: fixed;
+      top: 65%;
+      left: 50%;
+      margin-top: -20px;
+      margin-left: -75px;
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+   
+  </head>
+<body>
+<div id="joystick-container">
+  <div id="joystick-handle"></div>
+</div>
+<div id = "sliders">
+  <label for="waistSlider">Waist:</label>
+  <input type="range" id="waistSlider" name="waist" min="0" max="100" value="50">
+  <label for="tiltSlider">HeadTilt:</label>
+  <input type="range" id="tiltSlider" name="tilt" min="0" max="100" value="50">
+  <label for="panSlider">HeadPan:</label>
+  <input type="range" id="panSlider" name="pan" min="0" max="100" value="50">
+</div>
+
+<script>
+  const joystickContainer = document.getElementById('joystick-container');
+  const joystickHandle = document.getElementById('joystick-handle');
+
+  let isDragging = false;
+
+  joystickHandle.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', drag);
+  window.addEventListener('mouseup', stopDrag);
+
+  joystickHandle.addEventListener('touchstart', startDrag, { passive: false });
+  window.addEventListener('touchmove', drag, { passive: false });
+  window.addEventListener('touchend', stopDrag, { passive: false });
+
+  function startDrag(e) {
+    isDragging = true;
+    e.preventDefault();
+  }
+
+  async function drag(e) {
+    if (isDragging) {
+      const containerRect = joystickContainer.getBoundingClientRect();
+      const handleSize = joystickHandle.offsetWidth;
+      
+      let x = (e.clientX - 112.5) - containerRect.left - handleSize / 2;
+      let y = (e.clientY - 112.5) - containerRect.top - handleSize / 2;
+
+      x = Math.max(-112.5, Math.min(x, containerRect.width - handleSize));
+      y = Math.max(-112.5, Math.min(y, containerRect.height - handleSize));
+      if (x > 112.5) {
+        x = 112.5;
+      }
+      if (y > 112.5) {
+        y = 112.5;
+      }
+      
+      joystickHandle.style.transform = `translate(${x}px, ${y}px)`;
+      
+      const data = {
+      servo: ['WHEELFORWARDBACKWARD', 'WHEELTURN'],
+      value: [Math.floor(x), Math.floor(y)]
+      }
+
+      await fetch(`${window.origin}/process`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+    }
+  }
+  
+  async function stopDrag(e) {
+    isDragging = false;
+    const containerRect = joystickContainer.getBoundingClientRect();
+    const handleSize = joystickHandle.offsetWidth;
+    let y = (e.clientY - 112.5) - containerRect.top - handleSize / 2;
+    y = Math.max(-112.5, Math.min(y, containerRect.height - handleSize));
+    if (y > 112.5) {
+        y = 112.5;
+      }
+    joystickHandle.style.transform = 'translate(0, 0)';
+    const data = {
+      servo: ['WHEELFORWARDBACKWARD', 'WHEELTURN'],
+      value: [0, 0]
+      }
+
+      await fetch(`${window.origin}/process`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+  }
+
+  async function sendData(x, val) { 
+    const data = {
+      servo: x,
+      value: document.getElementById(val).value
+    }
+
+    await fetch(`${window.origin}/process`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+  }
+
+
+  // Sliders
+  const WAISTTURN = document.getElementById('waistSlider');
+  const HEADUPDOWN = document.getElementById('tiltSlider');
+  const HEADTURN = document.getElementById('panSlider');
+
+  waistSlider.addEventListener('input', () => {
+    sendData('WAISTTURN', 'waistSlider')
+  });
+
+  tiltSlider.addEventListener('input', () => {
+    sendData('HEADUPDOWN', 'tiltSlider')
+  });
+
+  panSlider.addEventListener('input', () => {
+    sendData('HEADTURN', 'panSlider');
+  });  
+
+</script>
+
+</body>
+</html>
