@@ -37,8 +37,15 @@ def main() -> None:
     bot = engine.Dialog_Engine()
     quadrant = bot.main()
 
+    #TODO: ADD MOTION SCRIPT HERE
 
+    #Once in the correct quadrant, announce charge and leave
+    speech.tts_input("I need to charge")
 
+    #TODO: MOTION to charging station (A1)
+
+    # Annouces charging activated (End of script)
+    speech.tts_input("Charging Activated")
     
 if __name__ == "__main__":
     main()
