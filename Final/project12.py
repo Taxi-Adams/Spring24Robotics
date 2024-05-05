@@ -22,14 +22,27 @@ def get_serial() -> None:
     response = ser.readline()
     list_response = response.decode().split(',')
     print("Made it before list response loop")
-    while list_response[0] != '$KT0':
+    while list_response[0] != '$KT7':
         print("In loop before the ser.readline() line")
         response = ser.readline()
-        print("In loop after the ser.readline() line")
+        #print("In loop after the ser.readline() line")
         list_response = response.decode().split(',')
-        print("At the end of the loop")
-        print("")
-
+        if(list_response[0] == '$KT7'):
+            print("list_response length: ")
+            print(len(list_response))
+            if(len(list_response) != 4):
+                continue
+            elif(len(list_response) == 4):
+                #print(list_response[0])
+                print(list_response[1])
+                print(list_response[2])
+                print(list_response[3])
+                print(list_response[4])
+            if(list_response[1] == 'null' or list_response[2] == 'null' or list_response[3] == 'null' or list_response[4] == 'null'):
+                continue
+        #print("At the end of the loop")
+        #print("")
+    print("Should have now left the get serial loop!!!")
     return([float(list_response[1]), float(list_response[2]),
              float(list_response[3]), float(list_response[4])])
 
@@ -146,11 +159,12 @@ def main():
     
     # Once someone approaches, greet them
     speech.tts_input((random.choice(greetings), "How can I assist?"))
+    print("Made it past greeting the person")
 
     # Goes to the script/ AI, and gets the correct quadrant
     bot2 = engine.Dialog_Engine()
     targetQuadrant = bot2.main()
-    
+    print("Got a quadrant response/input!!!!!")
     
     # move backwards slowly
     time.sleep(2.0)
@@ -190,13 +204,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 1
             if(tempQuadrant == 0):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 2):
             # turn to face East
@@ -207,13 +222,13 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
             if(tempQuadrant == 0):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
             # turn another 90 and move to the next quadrant
             turnAngle = 90.0
@@ -223,13 +238,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 2
             if(tempQuadrant == 1):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 3):
             turnAngle += 180.0
@@ -239,13 +255,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 3
             if(tempQuadrant == 0):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
     elif(currentQuadrant == 1):
         if(targetQuadrant == 0):
@@ -257,13 +274,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 0
             if(tempQuadrant == 1):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 1):
             waiting = True
@@ -275,13 +293,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 2
             if(tempQuadrant == 1):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 3):
             turnAngle += 180.0
@@ -291,13 +310,13 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
             if(tempQuadrant == 1):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
             # turn another 90 and move to the next quadrant
             turnAngle = 90.0
@@ -307,13 +326,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 3
             if(tempQuadrant == 2):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
     elif(currentQuadrant == 2):
         if(targetQuadrant == 0):
@@ -323,13 +343,13 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
             if(tempQuadrant == 2):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
             turnAngle = 270.0
             fraction = turnAngle / 360.0
@@ -338,13 +358,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 0
             if(tempQuadrant == 1):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 1):
             fraction = turnAngle / 360.0
@@ -353,13 +374,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 1
             if(tempQuadrant == 2):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 2):
             waiting = True
@@ -371,13 +393,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 3
             if(tempQuadrant == 2):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
     elif(currentQuadrant == 3):
         if(targetQuadrant == 0):
@@ -387,13 +410,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 0
             if(tempQuadrant == 3):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 1):
             fraction = turnAngle / 360.0
@@ -402,13 +426,13 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
             if(tempQuadrant == 3):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
             turnAngle = 90.0
             fraction = turnAngle / 360.0
@@ -417,13 +441,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 1
             if(tempQuadrant == 1):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 2):
             turnAngle += 90.0
@@ -433,13 +458,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 2
             if(tempQuadrant == 3):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
         elif(targetQuadrant == 3):
             waiting = True
@@ -447,7 +473,36 @@ def main():
     #Once in the correct quadrant, announce charge and leave
     speech.tts_input("I need to charge")
 
-    #TODO: MOTION to charging station (A1)
+    coords = get_serial()
+    d1 = coords[0]
+    d2 = coords[1]
+    d3 = coords[2]
+    d4 = coords[3]
+    currentQuadrant = find_quadrant(coords)
+    positionAngle = calc_angle(d3, d2)
+    [x, y] = calc_position(d3, positionAngle)
+    time.sleep(1.35)
+    bot.move_fb(5900)
+    bot.move_fb(7000)
+    time.sleep(1.18)
+    bot.stop_wheels_fb()
+    # get new distances and position
+    coords2 = get_serial()
+    d1Next = coords2[0]
+    d2Next = coords2[1]
+    d3Next = coords2[2]
+    d4Next = coords2[3]
+    phi = calc_angle(d3Next, d2Next)
+    [x2, y2] = calc_position(d3Next, phi)
+    firstPoint = [x, y]
+    secondPoint = [x2, y2]
+    # print("first point:" + str(x) + ", " + str(y))
+    # print ("second point: " + str(x2) + ", " + str(y2))
+    # calculate the current angle ccw from 90 degrees
+    turnAngle = calc_turn_angle(firstPoint, secondPoint)
+    print("I need to turn " + str(turnAngle) + " degrees")
+    
+    #MOTION to charging station (A1)
     targetQuadrant = 1
     if(currentQuadrant == 0):
         if(targetQuadrant == 1):
@@ -459,13 +514,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 1
             if(tempQuadrant == 0):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
     elif(currentQuadrant == 1):
         if(targetQuadrant == 1):
@@ -478,13 +534,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 1
             if(tempQuadrant == 2):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
     elif(currentQuadrant == 3):
         if(targetQuadrant == 1):
@@ -494,13 +551,13 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
+            tempQuadrant = find_quadrant(temporaryCoords)
             if(tempQuadrant == 3):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
             turnAngle = 90.0
             fraction = turnAngle / 360.0
@@ -509,13 +566,14 @@ def main():
             time.sleep(fraction * 2.4)
             bot.stop_wheels_lr()
             bot.move_fb(4900)
-            time.sleep(1.0) # replace with better measured time
+            time.sleep(1.7) # replace with better measured time
             bot.stop_wheels_fb()
             temporaryCoords = get_serial()
-            tempQuadrant = find_quadrant(temporaryCoords())
-            if(tempQuadrant == 1):
+            tempQuadrant = find_quadrant(temporaryCoords)
+            currentQuadrant = 1
+            if(tempQuadrant == 0):
                 bot.move_fb(4900)
-                time.sleep(0.25) # replace with better measured time
+                time.sleep(0.45) # replace with better measured time
                 bot.stop_wheels_fb()
     # Annouces charging activated (End of script)
     speech.tts_input("Charging Activated")
